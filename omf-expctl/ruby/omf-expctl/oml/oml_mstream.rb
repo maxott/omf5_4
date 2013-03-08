@@ -76,7 +76,7 @@ module OMF
           # ALERT: this is a bit of a hack
           #appDef = AppDefinition[application.to_s]
           appDef = application.appDefinition
-          tblPrefix = appDef.omlPrefix || appDef.path.split('/')[-1]
+          tblPrefix = appDef.omlPrefix || File.basename(appDef.path, '.*')
           @tableName = "#{tblPrefix}_#{name}"
           #puts ">>> TABLE_NAME: #{@tableName}"
           #@tableName = "#{appRef.split(':')[-1]}_#{name}"
