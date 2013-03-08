@@ -130,7 +130,7 @@ module OMF
         end
         
         def tableName
-          @opts[:table_name] || @opts['table_name']
+          @opts[:stream_name] || @opts['stream_name'] || @opts[:table_name] || @opts['table_name']
         end
       
         #
