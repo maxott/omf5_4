@@ -393,15 +393,16 @@ class AppDefinition < MObject
   #
   # Add a measurement point to this application.
   #
-  # - id = identification of measurement point
+  # - mp_id = identification of measurement point
   # - description = some text describing this measurement point 
-  # - metrix = the metric to use 
+  # - opts = options for the entire MP
+  #    - :table_name - Name to use for the SQL table name - default is to concatinate appName and mp_id
   # - block = an optional block to execute with this measurement point
   #
   # [Return] the newly created measurement point.
   #
-  def defMeasurement(id, description = nil, metrics = nil, &block)
-    m = ::OMF::EC::OML::MPoint.new(id, description, metrics)
+  def defMeasurement(id, description = nil, opts = {}, &block)
+    m = ::OMF::EC::OML::MPoint.new(id, description, opts)
     block.call(m) if block
     @measurements[id] = m
     return m

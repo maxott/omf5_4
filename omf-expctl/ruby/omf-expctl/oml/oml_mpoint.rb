@@ -105,25 +105,32 @@ module OMF
         #
         # Create a new measurement point (Mpoint) instance
         #
-        # - id =  the ID for this measurement point
+        # - mp_id =  the ID for this measurement point
         # - description =  some text describing this measurement point
-        # - metrics = an array or hash containing the metrics to use for this measurement point
+        # - opts = options for the entire MP
+        #    - :table_name - Name to use for the SQL table name - default is to concatinate appName and mp_id
         #
-        def initialize(id, description, metrics = nil)
+        def initialize(id, description, opts = opts)
           @id = id
           @description = description
           @metrics = Hash.new
-          if metrics != nil
-            metrics.each {|e|
-              if e.kind_of? Array
-                defMetric(e[0], e[1], e.length == 3 ? e[2] : nil)
-              elsif e.kind_of? Hash
-                defMetric(e["name"], e["type"], e["description"])
-              else
-                raise "Metric definition '" + e + "' needs to be either and array or a hash"
-              end
-            }
-          end
+          @opts = opts
+          
+          # if metrics != nil
+            # metrics.each {|e|
+              # if e.kind_of? Array
+                # defMetric(e[0], e[1], e.length == 3 ? e[2] : nil)
+              # elsif e.kind_of? Hash
+                # defMetric(e["name"], e["type"], e["description"])
+              # else
+                # raise "Metric definition '" + e + "' needs to be either and array or a hash"
+              # end
+            # }
+          # end
+        end
+        
+        def tableName
+          @opts[:table_name] || @opts['table_name']
         end
       
         #
@@ -149,6 +156,8 @@ module OMF
           end
           @metrics[name] = {:type => type, :description => description, :seqNo => @metrics.length}
         end
+        
+        
       
         #
         # Return the definition of this instance of measurement point as an XML element

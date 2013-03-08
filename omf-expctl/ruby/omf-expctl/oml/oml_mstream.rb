@@ -76,8 +76,13 @@ module OMF
           # ALERT: this is a bit of a hack
           #appDef = AppDefinition[application.to_s]
           appDef = application.appDefinition
-          tblPrefix = appDef.omlPrefix || File.basename(appDef.path, '.*')
-          @tableName = "#{tblPrefix}_#{name}"
+          @measurementDef = appDef.measurements[@mdef]
+          
+          unless @tableName = @measurementDef.tableName
+            tblPrefix = File.basename(appDef.path, '.*')
+            @tableName = "#{tblPrefix}_#{name}"
+          end
+          
           #puts ">>> TABLE_NAME: #{@tableName}"
           #@tableName = "#{appRef.split(':')[-1]}_#{name}"
 
@@ -118,9 +123,7 @@ module OMF
       	  opts.each do |parameter|
             # Get its detail from the application definition
             #appDef = AppDefinition[@application.to_s]
-            appDef = @application.appDefinition
-      	    measurementDef = appDef.measurements[@mdef]
-      	    metricDef = measurementDef.metrics[parameter]
+      	    metricDef = @measurementDef.metrics[parameter]
             # Set the default filter based on the metric type
       	    if metricDef[:type] == "xsd:float" || metricDef[:type] == "xsd:int" \
                      || metricDef[:type] == "xsd:long" || metricDef[:type] == "xsd:short"
